@@ -1,0 +1,73 @@
+﻿@using System.Drawing
+@using CovidCases.Enums
+@model CovidCases.Models.ReportViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <table class="table">
+        <tr>
+            @using (Html.BeginForm("Index", "Report", FormMethod.Post))
+            {
+            <th>
+                    @Html.HiddenFor(model => Model.Regions)
+                    @Html.DropDownListFor(model => model.SelectedRegion, new SelectList(Model.Regions), new {@class = "form-control" })
+            </th>
+            <th>
+                <input type="submit" class="btn btn-alert btn-primary btn-block" value="Report"/>
+            </th>
+                }
+            <th style="width: 100px">
+
+            </th>
+            <th>
+                @using (Html.BeginForm("GenerateReport", "Report", new { fileType = FileType.Xml}, FormMethod.Get))
+                {
+                    <input type="submit"  class="btn btn-success btn-block" value="XML"/>
+                }
+            </th>
+            <th>
+                @using (Html.BeginForm("GenerateReport", "Report", new { fileType = FileType.Json }, FormMethod.Get))
+                {
+                    <input type="submit"  class="btn btn-success btn-block" value="JSON"/>
+                }
+            </th>
+            <th>
+                @using (Html.BeginForm("GenerateReport", "Report", new { fileType = FileType.CSV}, FormMethod.Get))
+                {
+                    <input type="submit" class="btn btn-success btn-block" value="CSV"/>
+                }
+            </th>
+        </tr>
+    </table>
+   
+   
+   
+
+   
+</div>
+
+<br>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>@(Model.FilterByRegion ? "Province" : "Region")</th>
+                <th>Cases</th>
+                <th>Deaths</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in @Model.Data)
+            {
+                <tr>
+                    <td>@(Model.FilterByRegion ? @item.region.province : @item.region.name)</td>
+                    <td>@item.confirmed</td>
+                    <td>@item.deaths</td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
